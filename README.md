@@ -2,7 +2,7 @@
 
 This is a demo project to show you how to start building full stack apps with [Remix](https://remix.run/) and [Supabase](https://supabase.com/)
 
-This app is a simple dashboard to manager users, you can list all users, delete them, edit them and finally add them (CRUD).
+You will need to provide an `API_URL` and `API_KEY` environnement variable to interact with a Supabase project.
 
 **Take not that I didn't implemented authentication yet in this example.**
 
