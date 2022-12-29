@@ -7,14 +7,12 @@ import {
   useSubmit,
 } from "@remix-run/react";
 import GameCard from "~/components/GameCard";
-import type { Game } from "~/types/games";
 import { supabase } from "~/utils/supabase";
 
 // fetch the list of video games on the server and return them to the client side
 export const loader = async () => {
   const { data, error } = await supabase.from("video_games").select("*");
-  const games = data as Game[] | null;
-  return json({ games, error });
+  return json({ games: data, error });
 };
 
 // handle the deletion of a video game on the server
@@ -37,31 +35,33 @@ export default function Index() {
 
   if (!games || error) {
     return (
-      <div className="flex flex-col items-center h-screen bg-slate-900">
+      <div className="flex flex-col items-center h-screen font-bold bg-slate-900">
         <h1 className="text-4xl text-red-500 m-4">List of video games</h1>
         <Link
           to="create"
-          className="bg-red-500 p-2 hover:bg-red-600 focus:bg-red-600 rounded"
+          className="bg-slate-100 p-2 text-black hover:bg-slate-400 focus:bg-slate-400 rounded"
         >
           Add a video game
         </Link>
-        <p>Unable to fetch the video games list.</p>
-        <p>{error?.code}</p>
-        <p>{error?.hint}</p>
-        <p>{error?.message}</p>
-        <p>{error?.details}</p>
+        <div>
+          <p>Unable to fetch the video games list.</p>
+          <p className="text-red-500">{error?.code}</p>
+          <p className="text-red-500">{error?.hint}</p>
+          <p className="text-red-500">{error?.message}</p>
+          <p className="text-red-500">{error?.details}</p>
+        </div>
       </div>
     );
   }
 
   if (games.length === 0) {
     return (
-      <div className="flex flex-col items-center h-screen bg-slate-900">
+      <div className="flex flex-col items-center h-screen font-bold bg-slate-900">
         <h1 className="text-4xl text-red-500 m-4">List of video games</h1>
         <p>The list is empty.</p>
         <Link
           to="create"
-          className="bg-red-500 p-2 hover:bg-red-600 focus:bg-red-600 rounded"
+          className="bg-slate-100 p-2 text-black hover:bg-slate-400 focus:bg-slate-400 rounded"
         >
           Add a video game
         </Link>
@@ -71,10 +71,12 @@ export default function Index() {
 
   return (
     <div className="flex flex-col items-center h-screen bg-slate-900">
-      <h1 className="text-4xl text-red-500 m-4">List of video games</h1>
+      <h1 className="text-4xl text-red-500 m-4 font-bold">
+        List of video games
+      </h1>
       <Link
         to="create"
-        className="bg-red-500 p-2 hover:bg-red-600 focus:bg-red-600 rounded"
+        className="bg-slate-100 p-2 text-black hover:bg-slate-400 focus:bg-slate-400 rounded"
       >
         Add a video game
       </Link>

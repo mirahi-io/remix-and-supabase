@@ -19,15 +19,22 @@ import { yupResolver } from "@hookform/resolvers/yup";
 // create a video game on the server
 export const action = async ({ request }: ActionArgs) => {
   const formData = await request.formData();
-  const name = formData.get("name");
-  const developer = formData.get("developer");
-  const publisher = formData.get("publisher");
+  const name = formData.get("name")?.toString();
+  const developer = formData.get("developer")?.toString();
+  const publisher = formData.get("publisher")?.toString();
+
+  if (!name || !developer || !publisher) {
+    return json({ error: "Unable to retrieve the form values" });
+  }
+
   const { error } = await supabase
     .from("video_games")
     .insert([{ name, developer, publisher }]);
+
   if (error) {
-    return json({ error });
+    return json({ error: error.message });
   }
+
   return redirect("/games");
 };
 
@@ -59,7 +66,7 @@ export default function Create() {
         <h1 className="text-4xl text-red-500 m-4">Add a video game</h1>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col items-center mb-4 p-2 border-2 border-slate-500 rounded"
+          className="flex flex-col items-center mb-4 p-2 border-2 border-slate-500 bg-slate-700 rounded"
         >
           <Field
             name="name"
@@ -86,23 +93,18 @@ export default function Create() {
             <button
               type="submit"
               disabled={transition.state === "submitting"}
-              className="bg-red-500 py-1 px-2 mt-2 hover:bg-red-600 focus:bg-red-600 rounded"
+              className="bg-red-500 py-1 px-2 mt-2 min-w-[100px] text-center hover:bg-red-600 focus:bg-red-600 rounded"
             >
               {transition.state === "submitting" ? "Adding..." : "Add"}
             </button>
           </fieldset>
           {actionData?.error && (
-            <div>
-              <p>{actionData.error.code}</p>
-              <p>{actionData.error.message}</p>
-              <p>{actionData.error.hint}</p>
-              <p>{actionData.error.details}</p>
-            </div>
+            <p className="text-red-500">{actionData.error}</p>
           )}
         </form>
         <Link
           to="/games"
-          className="bg-red-500 p-2 hover:bg-red-600 focus:bg-red-600 rounded"
+          className="bg-slate-100 px-2 py-1 min-w-[100px] text-center text-black hover:bg-slate-400 focus:bg-slate-400 rounded"
         >
           Go back
         </Link>

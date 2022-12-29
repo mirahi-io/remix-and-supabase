@@ -24,7 +24,7 @@ export default function Field({
   } = useController({ name });
 
   return (
-    <fieldset disabled={disabled} className="flex flex-col">
+    <fieldset disabled={disabled} className="flex flex-col mb-2">
       <label htmlFor={name}>{label}: </label>
       <input
         type={type}
