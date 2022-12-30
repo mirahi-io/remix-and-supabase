@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import type { Database } from "~/types/supabase";
+import type { Database } from "~/types/database";
 
 /**
  * Initialize a supabase client, used to make API calls.
