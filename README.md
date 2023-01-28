@@ -2,8 +2,10 @@
 
 This is a demo project to show you how to start building full stack apps with [Remix](https://remix.run/) and [Supabase](https://supabase.com/)
 
-You will need to provide an `API_URL` and `API_KEY` environnement variable to interact with a Supabase project.
+This example is hooked to my Supabase project, if you want to test it with yours you must create an `env` file at the root of the project with the following values: `API_URL` and `API_KEY` which you can find in your Supabase project API documentation.
 
-**Take not that I didn't implemented authentication yet in this example.**
+You will also need to adapt the project to your database or create the same database as mine.
+
+**This branch is a copy of the `main` branch and implement authentication**
 
 Feel free to contact me if you have any questions at jonathan@mirahi.io

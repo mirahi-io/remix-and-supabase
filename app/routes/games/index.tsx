@@ -1,4 +1,4 @@
-import type { ActionArgs } from "@remix-run/node";
+import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
   Link,
@@ -7,20 +7,26 @@ import {
   useSubmit,
 } from "@remix-run/react";
 import GameCard from "~/components/GameCard";
-import { supabase } from "~/utils/supabase";
+import { getSupabaseServerClient } from "~/utils/supabase";
 
 // fetch the list of video games on the server and return them to the client side
-export const loader = async () => {
+export const loader = async ({ request }: LoaderArgs) => {
+  const response = new Response();
+  const supabase = getSupabaseServerClient(request, response);
+
   const { data, error } = await supabase.from("video_games").select("*");
-  return json({ games: data, error });
+  return json({ games: data, error }, { headers: response.headers });
 };
 
 // handle the deletion of a video game on the server
 export const action = async ({ request }: ActionArgs) => {
+  const response = new Response();
+  const supabase = getSupabaseServerClient(request, response);
+
   const formData = await request.formData();
   const id = formData.get("id");
   const { error } = await supabase.from("video_games").delete().eq("id", id);
-  return json({ error });
+  return json({ error }, { headers: response.headers });
 };
 
 export default function Index() {
@@ -35,8 +41,7 @@ export default function Index() {
 
   if (!games || error) {
     return (
-      <div className="flex flex-col items-center h-screen font-bold bg-slate-900">
-        <h1 className="text-4xl text-red-500 m-4">List of video games</h1>
+      <>
         <Link
           to="create"
           className="bg-slate-100 p-2 text-black hover:bg-slate-400 focus:bg-slate-400 rounded"
@@ -50,14 +55,13 @@ export default function Index() {
           <p className="text-red-500">{error?.message}</p>
           <p className="text-red-500">{error?.details}</p>
         </div>
-      </div>
+      </>
     );
   }
 
   if (games.length === 0) {
     return (
-      <div className="flex flex-col items-center h-screen font-bold bg-slate-900">
-        <h1 className="text-4xl text-red-500 m-4">List of video games</h1>
+      <>
         <p>The list is empty.</p>
         <Link
           to="create"
@@ -65,15 +69,12 @@ export default function Index() {
         >
           Add a video game
         </Link>
-      </div>
+      </>
     );
   }
 
   return (
-    <div className="flex flex-col items-center h-screen bg-slate-900">
-      <h1 className="text-4xl text-red-500 m-4 font-bold">
-        List of video games
-      </h1>
+    <>
       <Link
         to="create"
         className="bg-slate-100 p-2 text-black hover:bg-slate-400 focus:bg-slate-400 rounded"
@@ -90,6 +91,6 @@ export default function Index() {
           />
         ))}
       </ul>
-    </div>
+    </>
   );
 }
