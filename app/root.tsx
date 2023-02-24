@@ -46,6 +46,7 @@ export const loader = async ({ request }: LoaderArgs) => {
     { request, response }
   );
 
+  // Retrieves the user session to synchronize it with the client
   const {
     data: { session },
   } = await supabase.auth.getSession();

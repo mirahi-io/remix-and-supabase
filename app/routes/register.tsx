@@ -44,6 +44,7 @@ export default function Register() {
     if (error) {
       setRegisterError(error.message);
     } else {
+      // Trigger the current route loader via a get request, this will redirect the user to the dashboard
       submit(null, { method: "get" });
     }
   };
